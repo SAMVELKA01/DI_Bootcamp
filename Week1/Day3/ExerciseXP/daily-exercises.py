@@ -1,31 +1,29 @@
 # exercice 1
 class Cat:
-    def __init__(self, cat_name, cat_age):
-        self.name = cat_name
-        self.age = cat_age
+
+    def __init__(self, name, age):
+
+        self.name = name
+        self.age = age
 
 
-cat1 = Cat("Milo", 2)
-cat2 = Cat("Luna", 5)
-cat3 = Cat("Simba", 3)
+def find_oldest_cat(*cats):
+
+    return max(cats, key=lambda cat: cat.age)
 
 
-def find_oldest_cat(cat1, cat2, cat3):
+# Création des chats
+cat1 = Cat("Minou", 3)
+cat2 = Cat("Felix", 7)
+cat3 = Cat("Garfield", 5)
 
-    if cat1.age > cat2.age and cat1.age > cat3.age:
-        return cat1
-
-    elif cat2.age > cat1.age and cat2.age > cat3.age:
-        return cat2
-
-    else:
-        return cat3
-
+# Recherche du plus âgé
 oldest_cat = find_oldest_cat(cat1, cat2, cat3)
 
 print(f"Le chat le plus âgé est {oldest_cat.name}, et a {oldest_cat.age} ans.")
 
 # exercice 2
+
 
 class Dog:
     def __init__(self, name, height):
@@ -66,6 +64,7 @@ else:
 
 # exercice 3
 
+
 class Song:
     def __init__(self, lyrics):
         self.lyrics = lyrics
@@ -76,46 +75,50 @@ class Song:
 
 
 # Création de l'objet
-stairway = Song([
-    "There’s a lady who's sure",
-    "all that glitters is gold",
-    "and she’s buying a stairway to heaven"
-])
+stairway = Song(
+    [
+        "There’s a lady who's sure",
+        "all that glitters is gold",
+        "and she’s buying a stairway to heaven",
+    ]
+)
 
 # Appel de la méthode
 stairway.sing_me_a_song()
 
 # exercice 4
 
-class Zoo:
-    def __init__(self, zoo_name):
-        self.zoo_name = zoo_name
-        self.animals = []
 
-    # Bonus : ajout de plusieurs animaux avec *args
+class Zoo:
+
+    def __init__(self, zoo_name):
+
+        self.zoo_name = zoo_name
+        self.animals = set()
+
     def add_animal(self, *new_animals):
+
         for animal in new_animals:
-            if animal not in self.animals:
-                self.animals.append(animal)
+            self.animals.add(animal)
 
     def get_animals(self):
+
         print("Animaux du zoo :")
-        for animal in self.animals:
+
+        for animal in sorted(self.animals):
             print(animal)
 
     def sell_animal(self, animal_sold):
+
         if animal_sold in self.animals:
             self.animals.remove(animal_sold)
             print(f"{animal_sold} a été vendu.")
-        else:
-            print(f"{animal_sold} n'existe pas dans le zoo.")
 
     def sort_animals(self):
-        self.animals.sort()
 
         grouped_animals = {}
 
-        for animal in self.animals:
+        for animal in sorted(self.animals):
             first_letter = animal[0]
 
             if first_letter not in grouped_animals:
@@ -124,45 +127,27 @@ class Zoo:
             grouped_animals[first_letter].append(animal)
 
         self.grouped_animals = grouped_animals
-        return grouped_animals
 
     def get_groups(self):
+
         for letter, animals in self.grouped_animals.items():
             print(f"{letter}: {animals}")
 
 
-# Création du zoo
+# Test
 brooklyn_safari = Zoo("Brooklyn Safari")
 
-# Ajout des animaux
 brooklyn_safari.add_animal(
-    "Giraffe",
-    "Bear",
-    "Baboon",
-    "Lion",
-    "Zebra",
-    "Cat",
-    "Cougar"
+    "Giraffe", "Bear", "Baboon", "Lion", "Zebra", "Cat", "Cougar"
 )
 
-# Affichage des animaux
 brooklyn_safari.get_animals()
 
 print()
 
-# Vente d’un animal
 brooklyn_safari.sell_animal("Bear")
 
 print()
 
-# Affichage après vente
-brooklyn_safari.get_animals()
-
-print()
-
-# Tri et regroupement
 brooklyn_safari.sort_animals()
-
-# Affichage des groupes
 brooklyn_safari.get_groups()
-
