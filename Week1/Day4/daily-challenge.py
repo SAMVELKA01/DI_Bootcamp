@@ -1,77 +1,80 @@
-# Challenge 
+# Challenge
 
-class Farm:
-    def __init__(self, farm_name):
-        self.name = farm_name
-        self.animals = {}
-
-    # Étape 8 : ajout avec **kwargs
-    def add_animal(self, animal_type=None, count=1, **kwargs):
-
-        # Ajout simple
-        if animal_type:
-            if animal_type in self.animals:
-                self.animals[animal_type] += count
-            else:
-                self.animals[animal_type] = count
-
-        # Ajout multiple avec kwargs
-        for animal, quantity in kwargs.items():
-            if animal in self.animals:
-                self.animals[animal] += quantity
-            else:
-                self.animals[animal] = quantity
-
-    def get_info(self):
-        info = f"{self.name}'s farm\n\n"
-
-        for animal, count in self.animals.items():
-            info += f"{animal} : {count}\n"
-
-        info += "\n    E-I-E-I-0!"
-
-        return info
-
-    # Bonus Étape 6
-    def get_animal_types(self):
-        return sorted(self.animals.keys())
-
-    # Bonus Étape 7
-    def get_short_info(self):
-        animal_list = []
-
-        for animal in self.get_animal_types():
-
-            # pluriel si quantité > 1
-            if self.animals[animal] > 1:
-                animal_list.append(animal + "s")
-            else:
-                animal_list.append(animal)
-
-        # construction de la phrase
-        if len(animal_list) > 1:
-            animals_text = ", ".join(animal_list[:-1])
-            animals_text += " and " + animal_list[-1]
-        else:
-            animals_text = animal_list[0]
-
-        return f"{self.name}'s farm has {animals_text}."
+import math
 
 
-# Test du programme
-macdonald = Farm("McDonald")
+class Pagination:
+    def __init__(self, items=None, page_size=10):
+        self.items = items if items is not None else []
+        self.page_size = page_size
+        self.current_idx = 0
 
-macdonald.add_animal('cow', 5)
-macdonald.add_animal('sheep')
-macdonald.add_animal('sheep')
-macdonald.add_animal(goat=12)
+        self.total_pages = math.ceil(len(self.items) / self.page_size)
 
-print(macdonald.get_info())
+    def get_visible_items(self):
+        start = self.current_idx * self.page_size
+        end = start + self.page_size
 
-print()
+        return self.items[start:end]
 
-print(macdonald.get_animal_types())
+    def go_to_page(self, page_num):
+        if page_num < 1 or page_num > self.total_pages:
+            raise ValueError("Page invalide")
 
-print()
+        self.current_idx = page_num - 1
+        return self
 
-print(macdonald.get_short_info())
+    def first_page(self):
+        self.current_idx = 0
+        return self
+
+    def last_page(self):
+        self.current_idx = self.total_pages - 1
+        return self
+
+    def next_page(self):
+        if self.current_idx < self.total_pages - 1:
+            self.current_idx += 1
+
+        return self
+
+    def previous_page(self):
+        if self.current_idx > 0:
+            self.current_idx -= 1
+
+        return self
+
+    def __str__(self):
+        return "\n".join(self.get_visible_items())
+
+
+# Tests
+alphabetList = list("abcdefghijklmnopqrstuvwxyz")
+
+p = Pagination(alphabetList, 4)
+
+print(p.get_visible_items())
+# ['a', 'b', 'c', 'd']
+
+p.next_page()
+print(p.get_visible_items())
+# ['e', 'f', 'g', 'h']
+
+p.last_page()
+print(p.get_visible_items())
+# ['y', 'z']
+
+try:
+    p.go_to_page(10)
+except ValueError as error:
+    print(error)
+
+try:
+    p.go_to_page(0)
+except ValueError as error:
+    print(error)
+
+print(p.first_page().next_page().next_page().next_page().get_visible_items())
+# ['m', 'n', 'o', 'p']
+
+print(str(p))
